@@ -1,0 +1,58 @@
+import math
+
+def f(x):
+    """Подынтегральная функция"""
+    return math.sqrt(2*x**2 + 1.6) / (2*x + math.sqrt(0.5*x**2 + 3))
+
+def trapezoidal_method(a, b, epsilon):
+    """
+    Вычисление интеграла методом трапеций с заданной точностью
+    """
+    n = 4  # Начальное количество разбиений
+    I_prev = 0
+    I_current = float('inf')
+    
+    print(f"{'n':<8} {'h':<12} {'I_n':<15} {'|I_n - I_prev|':<15}")
+    print("-" * 55)
+    
+    while abs(I_current - I_prev) > epsilon:
+        h = (b - a) / n
+        I_prev = I_current
+        
+        # Вычисление интеграла по формуле трапеций
+        sum_f = 0.5 * (f(a) + f(b))
+        for i in range(1, n):
+            x_i = a + i * h
+            sum_f += f(x_i)
+        
+        I_current = h * sum_f
+        
+        print(f"{n:<8} {h:<12.6f} {I_current:<15.8f} {abs(I_current - I_prev):<15.8f}")
+        
+        n *= 2  # Удваиваем количество разбиений
+    
+    return I_current, h, n//2
+
+# Основная программа
+if __name__ == "__main__":
+    # Входные данные
+    a = 1.2
+    b = 2.0
+    epsilon = 1e-6
+    
+    print("ВЫЧИСЛЕНИЕ ИНТЕГРАЛА МЕТОДОМ ТРАПЕЦИЙ")
+    print(f"Подынтегральная функция: f(x) = sqrt(2x² + 1.6) / (2x + sqrt(0.5x² + 3))")
+    print(f"Пределы интегрирования: [{a}, {b}]")
+    print(f"Требуемая точность: {epsilon}")
+    print()
+    
+    # Вычисление интеграла
+    result, step, final_n = trapezoidal_method(a, b, epsilon)
+    
+    print("\n" + "="*55)
+    print("РЕЗУЛЬТАТЫ:")
+    print(f"Значение интеграла: {result:.8f}")
+    print(f"Шаг интегрирования: {step:.8f}")
+    print(f"Количество разбиений: {final_n}")
+    print(f"Точное значение (MathCad): 0.25300000")
+    print(f"Абсолютная погрешность: {abs(result - 0.253):.8f}")

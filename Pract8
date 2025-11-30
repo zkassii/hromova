@@ -1,0 +1,33 @@
+import math
+
+def f(x):
+    """Подынтегральная функция."""
+    return (3 * math.cos(x)) / (2*x + 1.7)
+
+def gauss_quadrature(a, b, n):
+    """Вычисляет интеграл функции f на [a, b] по формуле Гаусса при разбиении на n частей."""
+    h = (b - a) / n
+    integral_sum = 0.0
+    # Константа для формулы Гаусса
+    offset = h / (2 * math.sqrt(3))
+
+    for i in range(n):
+        x_i = a + i * h
+        x_i_plus_1 = x_i + h
+        midpoint = (x_i + x_i_plus_1) / 2
+        t1 = midpoint - offset
+        t2 = midpoint + offset
+        integral_sum += f(t1) + f(t2)
+
+    integral_result = (h / 2) * integral_sum
+    return integral_result
+
+# Параметры интегрирования
+a = 0.0
+b = 1.0
+n = 10
+
+# Вычисление интеграла
+result = gauss_quadrature(a, b, n)
+
+print(f"Значение интеграла по формуле Гаусса (n={n}): {result:.6f}")
